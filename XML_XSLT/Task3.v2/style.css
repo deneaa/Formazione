@@ -1,0 +1,280 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, sans-serif;
+}
+
+body {
+  background: #f8fafc;
+  color: #1e293b;
+  padding: 2rem;
+}
+
+h1 {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.table th {
+  background: #f1f5f9;
+  text-align: left;
+  padding: 1rem;
+  font-weight: 600;
+  color: #475569;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.modal-container {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 300px;
+}
+
+.modal-content h2 {
+  margin-bottom: 10px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 1rem;
+}
+
+.hidden {
+  display: none;
+}
+
+thead th {
+  cursor: pointer;
+  user-select: none;
+}
+
+thead th span.icon-arrow {
+  display: inline-block;
+  margin-left: 0.4rem;
+  font-size: 0.85rem;
+  opacity: 0;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+thead th:hover span.icon-arrow {
+  opacity: 0.4;
+}
+
+thead th.active span.icon-arrow {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+thead th.active.desc span.icon-arrow {
+  transform: rotate(180deg);
+}
+input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 0.8rem;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  background: #f8fafc;
+  color: #1e293b;
+
+  font-size: 0.9rem;
+
+  outline: none;
+  transition: 0.2s ease-in-out;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.find-area {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.find-area input {
+  width: 280px;
+  height: 42px;
+  margin-bottom: 0;
+}
+
+button,
+select,
+.find-area input {
+  height: 42px;
+  font-size: 0.95rem;
+}
+
+button {
+  background-color: #1e293b;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+
+  padding: 0 1rem;
+  margin-bottom: 0;
+}
+
+button:hover {
+  background: #334155;
+}
+
+select {
+  padding: 0 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  color: #1e293b;
+  cursor: pointer;
+}
+
+select:focus {
+  outline: none;
+  border-color: #64748b;
+}
+
+input.small {
+  padding: 0.45rem 0.6rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.6rem;
+}
+
+.toggle-extra {
+  width: 100%;
+  margin-top: 0.5rem;
+  margin-bottom: 0.8rem;
+  background: #475569;
+}
+
+.informations-container {
+  margin-top: 1rem;
+  padding: 1rem;
+
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+
+  font-size: 0.9rem;
+  line-height: 1.5;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.informations-container h3 {
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.informations-container p {
+  margin-bottom: 0.35rem;
+  color: #475569;
+}
+
+.informations-container b {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.informations-container hr {
+  border: none;
+  height: 1px;
+  background: #e2e8f0;
+  margin: 0.8rem 0;
+}
+
+.pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-size: 13px;
+  color: #555;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.status-message {
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.status-message.hidden {
+  display: none;
+}
+
+.status-loading {
+  background: #eef4ff;
+  color: #2452c8;
+  border: 1px solid #c4d6ff;
+}
+
+.status-error {
+  background: #fdeeee;
+  color: #b3261e;
+  border: 1px solid #f4c6c3;
+}
+
+.table-container.is-loading {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+button:disabled,
+select:disabled,
+input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

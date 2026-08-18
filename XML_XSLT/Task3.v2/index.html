@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>Tabel</h1>
+
+    <div class="toolbar">
+      <button class="addNewRowButton">Add new row</button>
+      <select name="data" id="data">
+        <option value="smallData">Small data</option>
+        <option value="bigData">Big data</option>
+      </select>
+      <button class="updateDataButton">Update</button>
+
+      <div class="find-area">
+        <input type="text" class="findDataInput" placeholder="Search..." />
+        <button class="findDataButton">Find</button>
+      </div>
+    </div>
+
+    <div class="status-message hidden"></div>
+
+    <div class="table-container"></div>
+    <div class="pagination-container"></div>
+
+    <div class="modal-container hidden"></div>
+
+    <div class="informations-container hidden"></div>
+
+    <script src="jquery.js"></script>
+    <script type="module" src="js/App.js"></script>
+  </body>
+</html>

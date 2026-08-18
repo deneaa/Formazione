@@ -6,13 +6,17 @@ export default class XmlService {
   async loadXslt() {
     if (this.xsltProcessor) return this.xsltProcessor;
 
+    // incarca fisierul
     const response = await fetch("./users.xsl");
+    // citeste continutul ca text
     const xslText = await response.text();
 
+    // transforma textul intr-un format XML.
     const parser = new DOMParser();
     const xslDoc = parser.parseFromString(xslText, "application/xml");
 
     const processor = new XSLTProcessor();
+    // incarca stylesheet-ul in procesor
     processor.importStylesheet(xslDoc);
 
     this.xsltProcessor = processor;
@@ -33,8 +37,10 @@ export default class XmlService {
 
     const processor = await this.loadXslt();
 
+    // aplicarea transformarea XML -> HTML
     const fragment = processor.transformToFragment(xmlDoc, document);
 
+    // extrage tabelul generat
     const table = fragment.querySelector("table");
 
     return table;

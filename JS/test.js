@@ -187,6 +187,7 @@ class Worker {
   getSalary() {
     return this.rate * this.days;
   }
+  
   getFullName() {
     return `${capitalize(this.name)} ${capitalize(this.surname)}`;
   }

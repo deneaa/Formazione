@@ -1,1 +1,32 @@
-<p>profile works!</p>
+@if (auth.currentUser(); as user) {
+  <div class="profile-page">
+    <div class="profile-header">
+      <div class="avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
+      <div>
+        <h1>{{ user.username }}</h1>
+        <p>{{ user.email }}</p>
+      </div>
+      <span class="role-badge" [class.admin]="user.role === 'Admin'">{{ user.role }}</span>
+    </div>
+
+    <section class="purchases-section">
+      <h2>Order history</h2>
+
+      @if (user.purchases.length === 0) {
+        <p class="empty">You haven't placed any orders yet.</p>
+      } @else {
+        <div class="purchases-list">
+          @for (purchase of user.purchases; track purchase.id) {
+            <div class="purchase-card">
+              <div class="purchase-info">
+                <span class="purchase-date">{{ purchase.date | date: 'medium' }}</span>
+                <span class="purchase-items">{{ purchase.items.length }} item(s)</span>
+              </div>
+              <span class="purchase-total">${{ purchase.total.toFixed(2) }}</span>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  </div>
+}

@@ -8,13 +8,14 @@ import { Profile } from './pages/profile/profile';
 import { Cart } from './pages/cart/cart';
 import { Admin } from './pages/admin/admin';
 import { authGuard } from './core/guards/auth-guard';
+import { guestGuard } from './core/guards/guest-guard';
 
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'products', component: Products },
   { path: 'products/:id', component: ProductDetail },
-  { path: 'login', component: Login },
-  { path: 'register', component: Register },
+  { path: 'login', component: Login, canActivate: [guestGuard] },
+  { path: 'register', component: Register, canActivate: [guestGuard] },
   { path: 'profile', component: Profile, canActivate: [authGuard] },
   { path: 'cart', component: Cart, canActivate: [authGuard] },
   { path: 'admin', component: Admin, canActivate: [authGuard], data: { role: 'Admin' } },

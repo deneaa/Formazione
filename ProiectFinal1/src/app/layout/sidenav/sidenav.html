@@ -1,0 +1,13 @@
+<nav class="sidenav">
+  <a routerLink="/" routerLinkActive="active">Home</a>
+  <a routerLink="/products" routerLinkActive="active">Products</a>
+
+  @if (auth.isLoggedIn()) {
+    <a routerLink="/cart" routerLinkActive="active">Cart</a>
+    <a routerLink="/profile" routerLinkActive="active">Profile</a>
+  }
+
+  @if (auth.hasRole('Admin')) {
+    <a routerLink="/admin" routerLinkActive="active">Admin</a>
+  }
+</nav>

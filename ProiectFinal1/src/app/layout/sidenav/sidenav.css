@@ -1,0 +1,16 @@
+.sidenav {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  padding: 1rem;
+  border-right: 1px solid #e0e0e0;
+}
+.sidenav a {
+  padding: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+}
+.sidenav a.active {
+  font-weight: bold;
+  color: #4a90d9;
+}

@@ -1,1 +1,53 @@
-<p>login works!</p>
+<div class="auth-page">
+  <form class="auth-card" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="auth-header">
+      <h1>Welcome back</h1>
+    </div>
+
+    <div class="field">
+      <label for="username">Username</label>
+      <input
+        id="username"
+        type="text"
+        formControlName="username"
+        placeholder="Enter your username"
+      />
+      @if (form.controls.username.touched && form.controls.username.invalid) {
+        <span class="field-error">
+          @if (form.controls.username.errors?.['required']) {
+            Username is required.
+          } @else if (form.controls.username.errors?.['minlength']) {
+            Username must be at least 5 characters.
+          }
+        </span>
+      }
+    </div>
+
+    <div class="field">
+      <label for="password">Password</label>
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        placeholder="Enter your password"
+      />
+      @if (form.controls.password.touched && form.controls.password.invalid) {
+        <span class="field-error">
+          @if (form.controls.password.errors?.['required']) {
+            Password is required.
+          } @else if (form.controls.password.errors?.['minlength']) {
+            Password must be at least 6 characters.
+          }
+        </span>
+      }
+    </div>
+
+    @if (errorMessage) {
+      <div class="form-error">{{ errorMessage }}</div>
+    }
+
+    <button type="submit" class="btn btn-primary">Log in</button>
+
+    <p class="switch">Don't have an account? <a routerLink="/register">Sign up</a></p>
+  </form>
+</div>

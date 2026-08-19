@@ -1,1 +1,59 @@
-<p>register works!</p>
+<div class="auth-page">
+  <form class="auth-card" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="auth-header">
+      <h1>Create account</h1>
+    </div>
+
+    <div class="field">
+      <label for="username">Username</label>
+      <input id="username" type="text" formControlName="username" placeholder="Choose a username" />
+      @if (form.controls.username.touched && form.controls.username.invalid) {
+        <span class="field-error">
+          @if (form.controls.username.errors?.['required']) {
+            Username is required.
+          } @else if (form.controls.username.errors?.['minlength']) {
+            Username must be at least 5 characters.
+          }
+        </span>
+      }
+    </div>
+
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email" placeholder="you@example.com" />
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+        <span class="field-error">
+          @if (form.controls.email.errors?.['required']) {
+            Email is required.
+          } @else if (form.controls.email.errors?.['email']) {
+            Enter a valid email address.
+          }
+        </span>
+      }
+    </div>
+
+    <div class="field">
+      <label for="password">Password</label>
+      <input id="password" type="password" formControlName="password" placeholder="Create a password" />
+      @if (form.controls.password.touched && form.controls.password.invalid) {
+        <span class="field-error">
+          @if (form.controls.password.errors?.['required']) {
+            Password is required.
+          } @else if (form.controls.password.errors?.['minlength']) {
+            Password must be at least 6 characters.
+          }
+        </span>
+      }
+    </div>
+
+    @if (errorMessage) {
+      <div class="form-error">{{ errorMessage }}</div>
+    }
+
+    <button type="submit" class="btn btn-primary">Sign up</button>
+
+    <p class="switch">
+      Already have an account? <a routerLink="/login">Log in</a>
+    </p>
+  </form>
+</div>

@@ -1,0 +1,86 @@
+.auth-page {
+  display: flex;
+  justify-content: center;
+  padding-top: 4rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 2.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.auth-header h1 {
+  font-size: 1.5rem;
+  margin: 0 0 0.35rem;
+}
+
+.auth-header p {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.field input {
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  transition: border-color 0.15s ease;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.field-error {
+  font-size: 0.8rem;
+  color: var(--color-danger);
+}
+
+.form-error {
+  padding: 0.65rem 0.8rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-sm);
+  color: var(--color-danger);
+  font-size: 0.85rem;
+}
+
+.btn {
+  width: 100%;
+  padding: 0.7rem;
+  font-size: 0.95rem;
+}
+
+.switch {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.switch a {
+  color: var(--color-primary);
+  font-weight: 600;
+}

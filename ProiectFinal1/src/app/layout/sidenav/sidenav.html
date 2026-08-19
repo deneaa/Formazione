@@ -1,13 +1,28 @@
 <nav class="sidenav">
-  <a routerLink="/" routerLinkActive="active">Home</a>
-  <a routerLink="/products" routerLinkActive="active">Products</a>
+  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+    <svg lucideHouse [size]="18"></svg>
+    Home
+  </a>
+  <a routerLink="/products" routerLinkActive="active">
+    <svg lucideShoppingBag [size]="18"></svg>
+    Products
+  </a>
 
   @if (auth.isLoggedIn()) {
-    <a routerLink="/cart" routerLinkActive="active">Cart</a>
-    <a routerLink="/profile" routerLinkActive="active">Profile</a>
+    <a routerLink="/cart" routerLinkActive="active">
+      <svg lucideShoppingCart [size]="18"></svg>
+      Cart
+    </a>
+    <a routerLink="/profile" routerLinkActive="active">
+      <svg lucideUser [size]="18"></svg>
+      Profile
+    </a>
   }
 
   @if (auth.hasRole('Admin')) {
-    <a routerLink="/admin" routerLinkActive="active">Admin</a>
+    <a routerLink="/admin" routerLinkActive="active">
+      <svg lucideSettings [size]="18"></svg>
+      Admin
+    </a>
   }
 </nav>

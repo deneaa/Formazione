@@ -1,14 +1,16 @@
-<!-- layout/header/header.html -->
 <header class="header">
   <a routerLink="/" class="logo">Online Store</a>
 
   <div class="header-actions">
     @if (auth.isLoggedIn()) {
-      <a routerLink="/profile">{{ auth.currentUser()?.username }}</a>
+      <a routerLink="/profile" class="user-link">
+        <svg lucideUser [size]="16"></svg>
+        {{ auth.currentUser()?.username }}
+      </a>
       <button (click)="logout()">Logout</button>
     } @else {
       <a routerLink="/login">Login</a>
-      <a routerLink="/register">Register</a>
+      <a routerLink="/register" class="btn btn-primary">Register</a>
     }
   </div>
 </header>

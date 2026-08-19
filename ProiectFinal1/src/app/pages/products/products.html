@@ -1,1 +1,24 @@
-<p>products works!</p>
+<div class="products-page">
+  <div class="toolbar">
+    <div class="toolbar-search">
+      <app-search-bar (search)="onSearch($event)"></app-search-bar>
+    </div>
+
+    <select class="select" (change)="onCategoryChange($any($event.target).value)">
+      <option value="">All categories</option>
+      @for (category of categories; track category) {
+        <option [value]="category">{{ category }}</option>
+      }
+    </select>
+
+    <select class="select" (change)="onSortChange($any($event.target).value)">
+      <option value="date">Newest first</option>
+      <option value="rating">Top rated</option>
+      <option value="category">Category</option>
+    </select>
+
+    <button class="btn btn-outline" (click)="exportPdf()">Export PDF</button>
+  </div>
+
+  <app-product-list [products]="filteredProducts()" (addToCart)="onAddToCart($event)"></app-product-list>
+</div>

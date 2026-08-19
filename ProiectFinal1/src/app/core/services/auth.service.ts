@@ -9,6 +9,8 @@ export class AuthService {
   currentUser = signal<User | null>(null);
 
   constructor(private storage: StorageService) {
+    this.ensureAdminUser();
+
     const saved = this.storage.get<User>('currentUser');
     if (saved) {
       this.currentUser.set(saved);
@@ -18,9 +20,7 @@ export class AuthService {
   register(payload: RegisterPayload): { success: boolean; message?: string } {
     const users = this.storage.get<User[]>('users') ?? [];
 
-    const exists = users.some(
-      u => u.username === payload.username || u.email === payload.email
-    );
+    const exists = users.some((u) => u.username === payload.username || u.email === payload.email);
     if (exists) {
       return { success: false, message: 'Username sau email deja folosit.' };
     }
@@ -46,7 +46,7 @@ export class AuthService {
     const users = this.storage.get<User[]>('users') ?? [];
 
     const found = users.find(
-      u => u.username === payload.username && u.password === payload.password
+      (u) => u.username === payload.username && u.password === payload.password,
     );
 
     if (!found) {
@@ -72,7 +72,7 @@ export class AuthService {
 
   setRole(userId: string, role: User['role']): { success: boolean; message?: string } {
     const users = this.storage.get<User[]>('users') ?? [];
-    const user = users.find(u => u.id === userId);
+    const user = users.find((u) => u.id === userId);
 
     if (!user) {
       return { success: false, message: 'Userul nu a fost găsit.' };
@@ -90,7 +90,7 @@ export class AuthService {
 
   updateCurrentUser(updated: User): void {
     const users = this.storage.get<User[]>('users') ?? [];
-    const index = users.findIndex(u => u.id === updated.id);
+    const index = users.findIndex((u) => u.id === updated.id);
     if (index !== -1) {
       users[index] = updated;
       this.storage.set('users', users);
@@ -101,5 +101,28 @@ export class AuthService {
   private setCurrentUser(user: User): void {
     this.storage.set('currentUser', user);
     this.currentUser.set(user);
+  }
+
+  private ensureAdminUser(): void {
+    const users = this.storage.get<User[]>('users') ?? [];
+
+    const adminExists = users.some((user) => user.username === 'Admin');
+
+    if (adminExists) {
+      return;
+    }
+
+    const admin: User = {
+      id: crypto.randomUUID(),
+      username: 'Admin',
+      email: 'admin@store.com',
+      password: '123456',
+      role: 'Admin',
+      cart: [],
+      purchases: [],
+    };
+
+    users.push(admin);
+    this.storage.set('users', users);
   }
 }

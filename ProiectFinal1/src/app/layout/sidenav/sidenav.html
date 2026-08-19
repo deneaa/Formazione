@@ -9,9 +9,12 @@
   </a>
 
   @if (auth.isLoggedIn()) {
-    <a routerLink="/cart" routerLinkActive="active">
+    <a routerLink="/cart" routerLinkActive="active" class="cart-link">
       <svg lucideShoppingCart [size]="18"></svg>
       Cart
+      @if (cartCount() > 0) {
+        <span class="badge">({{ cartCount() }})</span>
+      }
     </a>
     <a routerLink="/profile" routerLinkActive="active">
       <svg lucideUser [size]="18"></svg>

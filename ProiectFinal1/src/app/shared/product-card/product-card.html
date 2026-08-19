@@ -1,1 +1,24 @@
-<p>product-card works!</p>
+<a class="card product-card" [routerLink]="['/products', product().id]">
+  <div class="thumb">
+    @if (product().imageUrl) {
+      <img [src]="product().imageUrl" [alt]="product().name" />
+    } @else {
+      <span class="thumb-placeholder">{{ product().name.charAt(0) }}</span>
+    }
+  </div>
+
+  <div class="body">
+    <span class="category">{{ product().category }}</span>
+    <h3>{{ product().name }}</h3>
+
+    <div class="rating-row">
+      <app-star-rating [value]="product().averageRating"></app-star-rating>
+      <span class="rating-count">({{ product().ratings.length }})</span>
+    </div>
+
+    <div class="bottom-row">
+      <span class="price">${{ product().price.toFixed(2) }}</span>
+      <button class="btn btn-primary" (click)="onAddToCart($event)">Add to cart</button>
+    </div>
+  </div>
+</a>

@@ -1,1 +1,9 @@
-<p>product-list works!</p>
+@if (products().length === 0) {
+  <p class="empty">No products found.</p>
+} @else {
+  <div class="grid">
+    @for (product of products(); track product.id) {
+      <app-product-card [product]="product" (addToCart)="addToCart.emit($event)"></app-product-card>
+    }
+  </div>
+}

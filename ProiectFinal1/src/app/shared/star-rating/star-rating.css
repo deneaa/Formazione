@@ -1,0 +1,17 @@
+.stars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.star {
+  font-size: 1.1rem;
+  color: var(--color-border);
+}
+
+.star.filled {
+  color: #f59e0b;
+}
+
+.interactive .star {
+  cursor: pointer;
+}

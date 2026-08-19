@@ -1,1 +1,5 @@
-<p>star-rating works!</p>
+<div class="stars" [class.interactive]="interactive()">
+  @for (star of stars; track star) {
+    <span class="star" [class.filled]="star <= value()" (click)="onClick(star)">★</span>
+  }
+</div>

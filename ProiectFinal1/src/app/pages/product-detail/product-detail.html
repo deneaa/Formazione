@@ -1,1 +1,62 @@
-<p>product-detail works!</p>
+<!-- pages/product-detail/product-detail.html -->
+@if (product(); as product) {
+  <div class="detail-page">
+    <div class="detail-main card">
+      <div class="thumb">
+        @if (product.imageUrl) {
+          <img [src]="product.imageUrl" [alt]="product.name" />
+        } @else {
+          <span class="thumb-placeholder">{{ product.name.charAt(0) }}</span>
+        }
+      </div>
+
+      <div class="info">
+        <span class="category">{{ product.category }}</span>
+        <h1>{{ product.name }}</h1>
+
+        <div class="rating-row">
+          <app-star-rating [value]="product.averageRating"></app-star-rating>
+          <span class="rating-count">{{ product.averageRating }} ({{ product.ratings.length }} ratings)</span>
+        </div>
+
+        <p class="description">{{ product.description }}</p>
+
+        <div class="bottom-row">
+          <span class="price">${{ product.price.toFixed(2) }}</span>
+          <button class="btn btn-primary" (click)="addToCart()">Add to cart</button>
+        </div>
+
+        @if (auth.isLoggedIn()) {
+          <div class="user-rating">
+            <span>Your rating:</span>
+            <app-star-rating [value]="userRating() ?? 0" [interactive]="true" (rated)="rate($event)"></app-star-rating>
+          </div>
+        }
+      </div>
+    </div>
+
+    <section class="comments-section">
+      <h2>Comments ({{ comments().length }})</h2>
+
+      @if (auth.isLoggedIn()) {
+        <form class="comment-form" [formGroup]="commentForm" (ngSubmit)="submitComment()">
+          <input type="text" formControlName="text" placeholder="Write a comment..." />
+          <button type="submit" class="btn btn-primary" [disabled]="commentForm.invalid">Post</button>
+        </form>
+      }
+
+      @if (comments().length === 0) {
+        <p class="empty">No comments yet.</p>
+      } @else {
+        <div class="comments-list">
+          @for (comment of comments(); track comment.id) {
+            <div class="comment card">
+              <p>{{ comment.text }}</p>
+              <span class="comment-date">{{ comment.createdAt | date: 'medium' }}</span>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  </div>
+}

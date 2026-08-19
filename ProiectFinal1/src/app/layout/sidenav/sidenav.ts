@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LucideHouse, LucideShoppingBag, LucideShoppingCart, LucideUser, LucideSettings } from '@lucide/angular';
 import { AuthService } from '../../core/services/auth.service';
@@ -11,4 +11,10 @@ import { AuthService } from '../../core/services/auth.service';
 })
 export class Sidenav {
   auth = inject(AuthService);
+
+  cartCount = computed(() => {
+    const user = this.auth.currentUser();
+    if (!user) return 0;
+    return user.cart.reduce((sum, item) => sum + item.quantity, 0);
+  });
 }

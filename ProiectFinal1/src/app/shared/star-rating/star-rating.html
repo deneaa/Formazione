@@ -1,5 +1,21 @@
 <div class="stars" [class.interactive]="interactive()">
   @for (star of stars; track star) {
-    <span class="star" [class.filled]="star <= value()" (click)="onClick(star)">★</span>
+    <button
+      type="button"
+      class="star"
+      [class.filled]="fillPercent(star) === 100"
+      [disabled]="!interactive()"
+      (click)="onClick(star)"
+      [attr.aria-label]="'Rate ' + star + ' out of 5'"
+    >
+      <span class="star-wrap">
+        <svg lucideStar size[16] class="star-bg"></svg>
+        @if (fillPercent(star) > 0) {
+          <span class="star-fill-clip" [style.width.%]="fillPercent(star)">
+            <svg lucideStar size[16] class="star-fill"></svg>
+          </span>
+        }
+      </span>
+    </button>
   }
 </div>

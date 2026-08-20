@@ -1,17 +1,62 @@
 .stars {
   display: inline-flex;
-  gap: 2px;
+  align-items: center;
+  gap: 3px;
 }
-
 .star {
-  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: var(--color-border);
 }
-
-.star.filled {
-  color: #f59e0b;
+.star-wrap {
+  position: relative;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  transition: transform 0.15s ease;
+}
+.star-bg,
+.star-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 18px !important;
+  height: 18px !important;
+}
+.star-bg {
+  color: var(--color-border);
+  stroke-width: 1.5;
+}
+.star-fill-clip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 18px;
+  overflow: hidden;
+  display: block;
+  transition: width 0.2s ease;
+}
+.star-fill {
+  color: #fbbf24;
+  fill: #fbbf24;
+  stroke: #f59e0b;
+}
+.star.filled .star-bg {
+  color: #fbbf24;
 }
 
-.interactive .star {
+.stars.interactive .star:hover .star-bg {
+  color: #fbbf24;
+}
+.star:disabled {
+  cursor: default;
+}
+.stars.interactive .star {
   cursor: pointer;
 }

@@ -15,7 +15,7 @@ export class RecentlyViewedService {
 
   addToRecentlyViewed(productId: string): void {
     const current = this.ids().filter((id) => id !== productId);
-    const updated = [productId, ...current].slice(0, 10);
+    const updated = [productId, ...current].slice(0, 6);
 
     this.ids.set(updated);
     this.storage.set('recentlyViewed', updated);

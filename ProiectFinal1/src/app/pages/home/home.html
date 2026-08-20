@@ -3,3 +3,13 @@
   <a routerLink="/products" class="btn btn-primary">Browse products</a>
 </div>
 
+@if (recentlyViewed().length > 0) {
+  <section class="recent-section">
+    <h2>Recently viewed</h2>
+    <div class="recent-scroll">
+      @for (product of recentlyViewed(); track product.id) {
+        <app-product-card [product]="product" (addToCart)="onAddToCart($event)"></app-product-card>
+      }
+    </div>
+  </section>
+}

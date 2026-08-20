@@ -10,7 +10,14 @@
     </div>
 
     <section class="purchases-section">
-      <h2>Order history</h2>
+      <div class="purchases-header">
+        <h2>Order history</h2>
+        @if (user.purchases.length > 0) {
+          <button class="export-all-btn" (click)="exportAll(user.purchases)">
+            Export All
+          </button>
+        }
+      </div>
 
       @if (user.purchases.length === 0) {
         <p class="empty">You haven't placed any orders yet.</p>

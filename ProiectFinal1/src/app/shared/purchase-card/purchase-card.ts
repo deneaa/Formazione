@@ -4,6 +4,7 @@ import { LucideChevronDown, LucideChevronUp } from '@lucide/angular';
 
 import { Purchase } from '../../core/models';
 import { ProductService } from '../../core/services/product.service';
+import { ExportService } from '../../core/services/export.service';
 
 @Component({
   selector: 'app-purchase-card',
@@ -13,6 +14,7 @@ import { ProductService } from '../../core/services/product.service';
 })
 export class PurchaseCard {
   private productService = inject(ProductService);
+  private exportService = inject(ExportService);
 
   purchase = input.required<Purchase>();
 
@@ -28,5 +30,9 @@ export class PurchaseCard {
 
   getPriceById(productId: string): number {
     return this.productService.getPriceById(productId);
+  }
+
+  exportData(purchase: Purchase): void {
+    this.exportService.exportPurchaseToPdf(purchase);
   }
 }

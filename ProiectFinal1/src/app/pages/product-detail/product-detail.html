@@ -16,7 +16,9 @@
 
         <div class="rating-row">
           <app-star-rating [value]="product.averageRating"></app-star-rating>
-          <span class="rating-count">{{ product.averageRating }} ({{ product.ratings.length }} ratings)</span>
+          <span class="rating-count"
+            >{{ product.averageRating }} ({{ product.ratings.length }} ratings)</span
+          >
         </div>
 
         <p class="description">{{ product.description }}</p>
@@ -29,7 +31,11 @@
         @if (auth.isLoggedIn()) {
           <div class="user-rating">
             <span>Your rating:</span>
-            <app-star-rating [value]="userRating() ?? 0" [interactive]="true" (rated)="rate($event)"></app-star-rating>
+            <app-star-rating
+              [value]="userRating() ?? 0"
+              [interactive]="true"
+              (rated)="rate($event)"
+            ></app-star-rating>
           </div>
         }
       </div>
@@ -41,7 +47,9 @@
       @if (auth.isLoggedIn()) {
         <form class="comment-form" [formGroup]="commentForm" (ngSubmit)="submitComment()">
           <input type="text" formControlName="text" placeholder="Write a comment..." />
-          <button type="submit" class="btn btn-primary" [disabled]="commentForm.invalid">Post</button>
+          <button type="submit" class="btn btn-primary" [disabled]="commentForm.invalid">
+            Post
+          </button>
         </form>
       }
 
@@ -49,11 +57,11 @@
         <p class="empty">No comments yet.</p>
       } @else {
         <div class="comments-list">
-          @for (comment of comments(); track comment.id) {
-            <div class="comment card">
-              <p>{{ comment.text }}</p>
-              <span class="comment-date">{{ comment.createdAt | date: 'medium' }}</span>
-            </div>
+          @for (comm of comments(); track comm.id) {
+            <app-comment-card
+              [comment]="comm"
+              (deleteComment)="onDeleteComment($event)"
+            ></app-comment-card>
           }
         </div>
       }

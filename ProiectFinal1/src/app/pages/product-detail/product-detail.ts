@@ -2,17 +2,17 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DatePipe } from '@angular/common';
 import { ProductService } from '../../core/services/product.service';
 import { CommentService } from '../../core/services/comment.service';
 import { CartService } from '../../core/services/cart.service';
 import { RecentlyViewedService } from '../../core/services/recently-viewed.service';
 import { AuthService } from '../../core/services/auth.service';
 import { StarRating } from '../../shared/star-rating/star-rating';
+import { CommentCard } from '../../shared/comment-card/comment-card';
 
 @Component({
   selector: 'app-product-detail',
-  imports: [ReactiveFormsModule, DatePipe, StarRating],
+  imports: [ReactiveFormsModule, StarRating, CommentCard],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.css',
 })
@@ -74,7 +74,14 @@ export class ProductDetail implements OnInit {
     this.commentForm.reset();
   }
 
+  onDeleteComment(commentId: string): void {
+    this.commentService.deleteComment(commentId);
+  }
+
   addToCart(): void {
+    if (!this.auth.isLoggedIn()) {
+      this.router.navigate(['/login']);
+    }
     this.cartService.addToCart(this.productId());
   }
 }

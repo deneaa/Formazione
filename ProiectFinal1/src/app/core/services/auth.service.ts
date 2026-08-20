@@ -125,4 +125,11 @@ export class AuthService {
     users.push(admin);
     this.storage.set('users', users);
   }
+
+  getUsernameById(id: string): string {
+    const users = this.storage.get<User[]>('users') ?? [];
+    const user = users.find((u) => u.id === id);
+
+    return user?.username ?? 'Unknown';
+  }
 }

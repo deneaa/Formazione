@@ -1,0 +1,26 @@
+<div class="comment card">
+  <div class="comment-header">
+    <div class="comment-content">
+      <p>{{ comment().text }}</p>
+    </div>
+
+    @if (canDelete()) {
+      <button
+        type="button"
+        class="delete-btn"
+        aria-label="Delete comment"
+        title="Delete comment"
+        (click)="onDeleteComment(comment().id)"
+      >
+        <svg lucideX size[18]></svg>
+      </button>
+    }
+  </div>
+
+  <div class="comment-footer">
+    <span class="comment-user">{{ username() }}</span>
+    <span class="comment-date">
+      {{ comment().createdAt | date: 'medium' }}
+    </span>
+  </div>
+</div>

@@ -25,4 +25,8 @@ export class PurchaseCard {
   getNameById(productId: string): string {
     return this.productService.getNameById(productId);
   }
+
+  getPriceById(productId: string): number {
+    return this.productService.getPriceById(productId);
+  }
 }

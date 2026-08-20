@@ -39,7 +39,9 @@
             </strong>
           </div>
 
-          <span class="purchase-item-quantity"> ×{{ item.quantity }} </span>
+          <span class="purchase-item-quantity">
+            ×{{ item.quantity }} · ${{ getPriceById(item.productId).toFixed(2) }}
+          </span>
         </div>
       }
     </div>

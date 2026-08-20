@@ -30,6 +30,10 @@ export class ProductService {
     return this.products().find((p) => p.id === id)?.name ?? '';
   }
 
+  getPriceById(id: string): number {
+    return this.products().find((p) => p.id === id)?.price ?? 0;
+  }
+
   addProduct(payload: ProductPayload): void {
     const newProduct: Product = {
       id: crypto.randomUUID(),

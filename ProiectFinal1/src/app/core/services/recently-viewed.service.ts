@@ -1,34 +1,33 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Product } from '../models';
 import { StorageService } from './storage.service';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RecentlyViewedService {
-  private ids = signal<string[]>([]);
+  private storage = inject(StorageService);
+  private idsSubject: BehaviorSubject<string[]>;
 
-  constructor(private storage: StorageService) {
-    const saved = this.storage.get<string[]>('recentlyViewed');
-    this.ids.set(saved ?? []);
+  ids$: Observable<string[]>;
+
+  constructor() {
+    const saved = this.storage.get<string[]>('recentlyViewed') ?? [];
+    this.idsSubject = new BehaviorSubject<string[]>(saved);
+    this.ids$ = this.idsSubject.asObservable();
   }
 
   addToRecentlyViewed(productId: string): void {
-    const current = this.ids().filter((id) => id !== productId);
+    const current = this.idsSubject.value.filter((id) => id !== productId);
     const updated = [productId, ...current].slice(0, 6);
 
-    this.ids.set(updated);
+    this.idsSubject.next(updated);
     this.storage.set('recentlyViewed', updated);
   }
 
-  getRecentlyViewed(allProducts: Product[]): Product[] {
-    return this.ids()
-      .map((id) => allProducts.find((p) => p.id === id))
-      .filter((p): p is Product => !!p);
-  }
-
   clear(): void {
-    this.ids.set([]);
+    this.idsSubject.next([]);
     this.storage.remove('recentlyViewed');
   }
 }

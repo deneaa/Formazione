@@ -69,34 +69,3 @@
   gap: 0.75rem;
 }
 
-.purchase-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1.25rem;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-}
-
-.purchase-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.purchase-date {
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.purchase-items {
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-}
-
-.purchase-total {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--color-primary);
-}

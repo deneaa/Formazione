@@ -1,0 +1,47 @@
+<div class="purchase-wrapper" [class.open]="isOpen()">
+  <div class="purchase-card">
+    <div class="purchase-info">
+      <span class="purchase-date">
+        {{ purchase().date | date: 'medium' }}
+      </span>
+
+      <span class="purchase-items"> {{ purchase().items.length }} item(s) </span>
+    </div>
+
+    <div class="purchase-actions">
+      <span class="purchase-total"> ${{ purchase().total.toFixed(2) }} </span>
+
+      <button
+        type="button"
+        class="dropdown-button"
+        [class.open]="isOpen()"
+        (click)="toggleDropdown()"
+        [attr.aria-expanded]="isOpen()"
+        aria-label="Show purchased items"
+      >
+        @if (!isOpen()) {
+          <svg lucideChevronDown size[18]></svg>
+        } @else {
+          <svg lucideChevronUp size[18]></svg>
+        }
+      </button>
+    </div>
+  </div>
+
+  @if (isOpen()) {
+    <div class="purchase-dropdown">
+      @for (item of purchase().items; track item.productId) {
+        <div class="purchase-item">
+          <div class="purchase-item-info">
+            <span class="purchase-item-label">Product:</span>
+            <strong class="purchase-item-name">
+              {{ getNameById(item.productId) }}
+            </strong>
+          </div>
+
+          <span class="purchase-item-quantity"> ×{{ item.quantity }} </span>
+        </div>
+      }
+    </div>
+  }
+</div>

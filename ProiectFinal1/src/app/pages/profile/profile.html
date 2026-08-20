@@ -17,13 +17,7 @@
       } @else {
         <div class="purchases-list">
           @for (purchase of user.purchases; track purchase.id) {
-            <div class="purchase-card">
-              <div class="purchase-info">
-                <span class="purchase-date">{{ purchase.date | date: 'medium' }}</span>
-                <span class="purchase-items">{{ purchase.items.length }} item(s)</span>
-              </div>
-              <span class="purchase-total">${{ purchase.total.toFixed(2) }}</span>
-            </div>
+            <app-purchase-card [purchase]="purchase"></app-purchase-card>
           }
         </div>
       }

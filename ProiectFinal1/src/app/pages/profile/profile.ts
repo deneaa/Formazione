@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
-import { DatePipe } from '@angular/common';
+import { PurchaseCard } from '../../shared/purchase-card/purchase-card';
 
 @Component({
   selector: 'app-profile',
-  imports: [DatePipe],
+  imports: [PurchaseCard],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })

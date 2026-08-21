@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { ProductService } from '../../core/services/product.service';
 import { RecentlyViewedService } from '../../core/services/recently-viewed.service';
 import { CartService } from '../../core/services/cart.service';
-import { ProductCard } from '../../shared/product-card/product-card';
+import { ProductCard } from '../../shared/components/product-card/product-card';
 import { Product } from '../../core/models';
 
 @Component({

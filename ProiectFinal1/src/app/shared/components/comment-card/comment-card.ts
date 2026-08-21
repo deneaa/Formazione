@@ -1,7 +1,7 @@
 import { Component, computed, inject, input, output } from '@angular/core';
-import { Comment } from '../../core/models';
+import { Comment } from '../../../core/models';
 import { DatePipe } from '@angular/common';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { LucideX } from '@lucide/angular';
 
 @Component({

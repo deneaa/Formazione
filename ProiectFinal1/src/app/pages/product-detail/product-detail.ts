@@ -7,8 +7,8 @@ import { CommentService } from '../../core/services/comment.service';
 import { CartService } from '../../core/services/cart.service';
 import { RecentlyViewedService } from '../../core/services/recently-viewed.service';
 import { AuthService } from '../../core/services/auth.service';
-import { StarRating } from '../../shared/star-rating/star-rating';
-import { CommentCard } from '../../shared/comment-card/comment-card';
+import { StarRating } from '../../shared/components/star-rating/star-rating';
+import { CommentCard } from '../../shared/components/comment-card/comment-card';
 
 @Component({
   selector: 'app-product-detail',

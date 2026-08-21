@@ -9,7 +9,7 @@
 
   <div class="body">
     <span class="category">{{ product().category }}</span>
-    <h3>{{ product().name }}</h3>
+    <h3 [title]="product().name">{{ product().name | truncate: 22 }}</h3>
 
     <div class="rating-row">
       <app-star-rating [value]="product().averageRating"></app-star-rating>

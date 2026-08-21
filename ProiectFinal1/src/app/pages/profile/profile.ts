@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
-import { PurchaseCard } from '../../shared/purchase-card/purchase-card';
+import { PurchaseCard } from '../../shared/components/purchase-card/purchase-card';
 import { ExportService } from '../../core/services/export.service';
 import { Purchase } from '../../core/models';
 

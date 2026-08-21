@@ -1,11 +1,23 @@
-import { Injectable, signal } from '@angular/core';
-import { Product, ProductPayload, Rating, Category } from '../models';
+import { inject, Injectable, signal } from '@angular/core';
+import { Product, ProductPayload, Rating, Category, CATEGORIES } from '../models';
 import { StorageService } from './storage.service';
+import { HttpClient } from '@angular/common/http';
+
+interface FakeStoreProduct {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  category: string;
+  image: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
+  private http = inject(HttpClient);
+
   products = signal<Product[]>([]);
 
   constructor(private storage: StorageService) {
@@ -187,5 +199,49 @@ export class ProductService {
         averageRating: 0,
       },
     ];
+  }
+
+  fetchRandomProduct(): void {
+    const usedIds = this.storage.get<number[]>('usedApiProductIds') ?? [];
+    const availableIds = Array.from({ length: 20 }, (_, i) => i + 1).filter(
+      (id) => !usedIds.includes(id),
+    );
+
+    if (availableIds.length === 0) {
+      return;
+    }
+
+    const randomId = availableIds[Math.floor(Math.random() * availableIds.length)];
+
+    this.http
+      .get<FakeStoreProduct>(`https://fakestoreapi.com/products/${randomId}`)
+      .subscribe((apiProduct) => {
+        const product: Product = {
+          id: crypto.randomUUID(),
+          name: apiProduct.title,
+          description: apiProduct.description,
+          price: apiProduct.price,
+          category: this.mapCategory(apiProduct.category),
+          imageUrl: apiProduct.image,
+          createdAt: new Date().toISOString(),
+          ratings: [],
+          averageRating: 0,
+        };
+
+        const updated = [...this.products(), product];
+        this.saveAll(updated);
+
+        this.storage.set('usedApiProductIds', [...usedIds, randomId]);
+      });
+  }
+
+  private mapCategory(apiCategory: string): Category {
+    const map: Record<string, Category> = {
+      electronics: 'Electronics',
+      jewelery: 'Fashion',
+      "men's clothing": 'Fashion',
+      "women's clothing": 'Fashion',
+    };
+    return map[apiCategory] ?? CATEGORIES[0];
   }
 }

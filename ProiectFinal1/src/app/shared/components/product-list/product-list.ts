@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { Product } from '../../core/models';
+import { Product } from '../../../core/models';
 import { ProductCard } from '../product-card/product-card';
 
 @Component({

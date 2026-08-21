@@ -1,12 +1,13 @@
 import { Component, inject, input, output } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { Product } from '../../core/models';
+import { Product } from '../../../core/models';
 import { StarRating } from '../star-rating/star-rating';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { TruncatePipe } from '../../pipes/truncate.pipe';
 
 @Component({
   selector: 'app-product-card',
-  imports: [RouterLink, StarRating],
+  imports: [RouterLink, StarRating, TruncatePipe],
   templateUrl: './product-card.html',
   styleUrl: './product-card.css',
 })

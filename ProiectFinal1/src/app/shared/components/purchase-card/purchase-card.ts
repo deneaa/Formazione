@@ -2,9 +2,9 @@ import { Component, inject, input, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { LucideChevronDown, LucideChevronUp } from '@lucide/angular';
 
-import { Purchase } from '../../core/models';
-import { ProductService } from '../../core/services/product.service';
-import { ExportService } from '../../core/services/export.service';
+import { Purchase } from '../../../core/models';
+import { ProductService } from '../../../core/services/product.service';
+import { ExportService } from '../../../core/services/export.service';
 
 @Component({
   selector: 'app-purchase-card',

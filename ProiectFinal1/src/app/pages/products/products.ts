@@ -4,8 +4,8 @@ import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 import { ExportService } from '../../core/services/export.service';
 import { CATEGORIES, Category } from '../../core/models';
-import { ProductList } from '../../shared/product-list/product-list';
-import { SearchBar } from '../../shared/search-bar/search-bar';
+import { ProductList } from '../../shared/components/product-list/product-list';
+import { SearchBar } from '../../shared/components/search-bar/search-bar';
 
 type SortOption = 'date' | 'rating' | 'category';
 
@@ -61,5 +61,9 @@ export class Products {
 
   exportPdf(): void {
     this.exportService.exportProductsToPdf(this.filteredProducts());
+  }
+
+  fetchRandom(): void {
+    this.productService.fetchRandomProduct();
   }
 }

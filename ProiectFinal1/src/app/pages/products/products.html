@@ -18,7 +18,11 @@
     </select>
 
     <button class="btn btn-outline" (click)="exportPdf()">Export PDF</button>
+    <button class="btn btn-primary" (click)="fetchRandom()">Get random product</button>
   </div>
 
-  <app-product-list [products]="filteredProducts()" (addToCart)="onAddToCart($event)"></app-product-list>
+  <app-product-list
+    [products]="filteredProducts()"
+    (addToCart)="onAddToCart($event)"
+  ></app-product-list>
 </div>

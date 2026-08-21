@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { LucideStar } from '@lucide/angular';
 
 @Component({
@@ -6,6 +6,7 @@ import { LucideStar } from '@lucide/angular';
   imports: [LucideStar],
   templateUrl: './star-rating.html',
   styleUrl: './star-rating.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StarRating {
   value = input<number>(0);

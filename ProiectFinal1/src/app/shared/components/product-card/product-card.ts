@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Product } from '../../../core/models';
 import { StarRating } from '../star-rating/star-rating';
@@ -10,6 +10,7 @@ import { TruncatePipe } from '../../pipes/truncate.pipe';
   imports: [RouterLink, StarRating, TruncatePipe],
   templateUrl: './product-card.html',
   styleUrl: './product-card.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductCard {
   private auth = inject(AuthService);

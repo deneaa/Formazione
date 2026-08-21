@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { Comment } from '../../../core/models';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
@@ -9,6 +9,7 @@ import { LucideX } from '@lucide/angular';
   imports: [DatePipe, LucideX],
   templateUrl: './comment-card.html',
   styleUrl: './comment-card.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentCard {
   private auth = inject(AuthService);

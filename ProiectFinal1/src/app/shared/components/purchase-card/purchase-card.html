@@ -1,10 +1,14 @@
-<div class="purchase-wrapper" [class.open]="isOpen()">
+<div
+  class="purchase-wrapper"
+  [class.open]="isOpen()"
+  appClickOutside
+  (clickOutside)="closeDropdown()"
+>
   <div class="purchase-card">
     <div class="purchase-info">
       <span class="purchase-date">
         {{ purchase().date | date: 'medium' }}
       </span>
-
       <span class="purchase-items"> {{ purchase().items.length }} item(s) </span>
     </div>
 
@@ -35,11 +39,8 @@
         <div class="purchase-item">
           <div class="purchase-item-info">
             <span class="purchase-item-label">Product:</span>
-            <strong class="purchase-item-name">
-              {{ getNameById(item.productId) }}
-            </strong>
+            <strong class="purchase-item-name">{{ getNameById(item.productId) }}</strong>
           </div>
-
           <span class="purchase-item-quantity">
             ×{{ item.quantity }} · ${{ getPriceById(item.productId).toFixed(2) }}
           </span>

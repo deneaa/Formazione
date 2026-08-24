@@ -3,7 +3,7 @@
   flex-direction: column;
   overflow: hidden;
   width: 100%;
-  height: 280px;
+  height: 310px;
   transition: box-shadow 0.15s ease, transform 0.15s ease;
 }
 
@@ -13,7 +13,7 @@
 }
 
 .thumb {
-  height: 140px;
+  height: 160px;
   flex-shrink: 0;
   background: var(--color-bg);
   display: flex;
@@ -52,7 +52,7 @@
 .body h3 {
   font-size: 0.98rem;
   margin: 0;
-  white-space: nowrap; /* nu lasă textul să treacă pe rând nou */
+  white-space: nowrap;
   cursor: default;
 }
 

@@ -22,7 +22,7 @@ export class TaskService {
       return null;
     }
 
-    const now = new Date();
+    const now = new Date().toISOString();
 
     const task: Task = {
       id: crypto.randomUUID(),
@@ -65,8 +65,8 @@ export class TaskService {
         ? {
             ...task,
             status: 'Completed' as TaskStatus,
-            completedAt: new Date(),
-            updatedAt: new Date(),
+            completedAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
           }
         : task,
     );
@@ -89,8 +89,8 @@ export class TaskService {
         ? {
             ...task,
             status: 'Deleted' as TaskStatus,
-            deletedAt: new Date(),
-            updatedAt: new Date(),
+            deletedAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
           }
         : task,
     );
@@ -113,7 +113,7 @@ export class TaskService {
         ? {
             ...task,
             ...changes,
-            updatedAt: new Date(),
+            updatedAt: new Date().toISOString(),
           }
         : task,
     );

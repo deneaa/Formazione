@@ -7,11 +7,11 @@ export interface Task {
   status: TaskStatus;
   category: TaskCategory;
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 
-  completedAt?: Date;
-  deletedAt?: Date;
+  completedAt?: string;
+  deletedAt?: string;
 }
 
 export type TaskPriority = 'Low' | 'Medium' | 'High';

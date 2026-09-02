@@ -1,1 +1,21 @@
-<router-outlet></router-outlet>
+<header class="navbar">
+  <span class="logo">TaskApp</span>
+
+  <nav>
+    <a routerLink="/">Home</a>
+
+    @if (auth.isAuthenticated()) {
+      <a routerLink="/tasks">Tasks</a>
+      <a routerLink="/statistics">Statistics</a>
+      <a routerLink="/profile">Profile</a>
+      <button (click)="logout()">Logout</button>
+    } @else {
+      <a routerLink="/login">Login</a>
+      <a routerLink="/register">Register</a>
+    }
+  </nav>
+</header>
+
+<main>
+  <router-outlet></router-outlet>
+</main>

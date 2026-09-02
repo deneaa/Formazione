@@ -57,7 +57,8 @@ export class AuthService {
   }
 
   updateCurrentUser(updated: User): void {
-    const users = this.storage.get<User[]>('users') ?? [];``
+    const users = this.storage.get<User[]>('users') ?? [];
+    ``;
     const index = users.findIndex((u) => u.id === updated.id);
     if (index !== -1) {
       users[index] = updated;
@@ -76,5 +77,9 @@ export class AuthService {
     const user = users.find((u) => u.id === id);
 
     return user?.username ?? 'Unknown';
+  }
+
+  isAuthenticated(): boolean {
+    return !!this.currentUser();
   }
 }

@@ -1,6 +1,8 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { DatePipe } from '@angular/common';
 import { TaskService } from '../../core/services/task.service';
 import {
   Task,
@@ -14,26 +16,32 @@ type SortBy = 'date' | 'priority';
 type SortDir = 'asc' | 'desc';
 
 @Component({
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, ReactiveFormsModule, RouterLink, DatePipe],
   selector: 'app-tasks',
   styleUrl: './tasks.css',
   templateUrl: './tasks.html',
 })
 export class Tasks {
   private taskService = inject(TaskService);
+  private fb = inject(FormBuilder);
 
   priorities = PRIORITIES;
   categories = CATEGORIES;
 
-  modalOpen = signal(false);
-  modalMode = signal<'add' | 'edit'>('add');
+  taskForm = this.fb.nonNullable.group({
+    title: ['', [Validators.required, Validators.minLength(2)]],
+    description: [''],
+    priority: ['Medium' as TaskPriority, Validators.required],
+    category: ['Personal' as TaskCategory, Validators.required],
+    estimatedHours: [1, [Validators.required, Validators.min(0)]],
+    dueDate: [''],
+  });
+
+  formModalOpen = signal(false);
+  formMode = signal<'add' | 'edit'>('add');
   editingId: string | null = null;
 
-  formTitle = '';
-  formDescription = '';
-  formPriority: TaskPriority = 'Medium';
-  formCategory: TaskCategory = 'Personal';
-  formHours = 1;
+  detailsTask = signal<Task | null>(null);
 
   searchText = signal('');
   categoryFilter = signal<TaskCategory | 'All'>('All');
@@ -44,8 +52,10 @@ export class Tasks {
 
   private allActive = computed(() => this.taskService.getTasksByStatus('Active'));
 
+  activeCount = computed(() => this.allActive().length);
   completedCount = computed(() => this.taskService.getTasksByStatus('Completed').length);
   deletedCount = computed(() => this.taskService.getTasksByStatus('Deleted').length);
+  totalHours = computed(() => this.allActive().reduce((s, t) => s + (t.estimatedHours || 0), 0));
 
   private filteredActive = computed(() => {
     let list = this.allActive();
@@ -84,63 +94,100 @@ export class Tasks {
     return grouped;
   });
 
+
   openAddModal(): void {
-    this.modalMode.set('add');
+    this.formMode.set('add');
     this.editingId = null;
-    this.formTitle = '';
-    this.formDescription = '';
-    this.formPriority = 'Medium';
-    this.formCategory = 'Personal';
-    this.formHours = 1;
-    this.modalOpen.set(true);
+    this.taskForm.reset({
+      title: '',
+      description: '',
+      priority: 'Medium',
+      category: 'Personal',
+      estimatedHours: 1,
+      dueDate: '',
+    });
+    this.formModalOpen.set(true);
   }
 
   openEditModal(task: Task): void {
-    this.modalMode.set('edit');
+    this.formMode.set('edit');
     this.editingId = task.id;
-    this.formTitle = task.title;
-    this.formDescription = task.description ?? '';
-    this.formPriority = task.priority;
-    this.formCategory = task.category;
-    this.formHours = task.estimatedHours;
-    this.modalOpen.set(true);
+    this.taskForm.reset({
+      title: task.title,
+      description: task.description ?? '',
+      priority: task.priority,
+      category: task.category,
+      estimatedHours: task.estimatedHours,
+      dueDate: task.dueDate ?? '',
+    });
+    this.detailsTask.set(null);
+    this.formModalOpen.set(true);
   }
 
-  closeModal(): void {
-    this.modalOpen.set(false);
+  closeFormModal(): void {
+    this.formModalOpen.set(false);
   }
 
-  submitModal(): void {
-    const title = this.formTitle.trim();
-    if (!title) return;
+  submitForm(): void {
+    if (this.taskForm.invalid) {
+      this.taskForm.markAllAsTouched();
+      return;
+    }
 
-    if (this.modalMode() === 'add') {
+    const v = this.taskForm.getRawValue();
+
+    if (this.formMode() === 'add') {
       this.taskService.createTask(
-        title,
-        this.formCategory,
-        this.formPriority,
-        this.formHours,
-        this.formDescription.trim() || undefined,
+        v.title.trim(),
+        v.category,
+        v.priority,
+        v.estimatedHours,
+        v.description.trim() || undefined,
+        v.dueDate || undefined,
       );
     } else if (this.editingId) {
       this.taskService.updateTask(this.editingId, {
-        title,
-        description: this.formDescription.trim() || undefined,
-        category: this.formCategory,
-        priority: this.formPriority,
-        estimatedHours: this.formHours,
+        title: v.title.trim(),
+        description: v.description.trim() || undefined,
+        category: v.category,
+        priority: v.priority,
+        estimatedHours: v.estimatedHours,
+        dueDate: v.dueDate || undefined,
       });
     }
 
-    this.closeModal();
+    this.closeFormModal();
   }
 
-  complete(task: Task): void {
+
+  openDetails(task: Task): void {
+    this.detailsTask.set(task);
+  }
+
+  closeDetails(): void {
+    this.detailsTask.set(null);
+  }
+
+  editFromDetails(task: Task): void {
+    this.openEditModal(task);
+  }
+
+
+  complete(task: Task, evt?: Event): void {
+    evt?.stopPropagation();
     this.taskService.completeTask(task.id);
+    this.detailsTask.set(null);
   }
 
-  remove(task: Task): void {
+  remove(task: Task, evt?: Event): void {
+    evt?.stopPropagation();
     this.taskService.deleteTask(task.id);
+    this.detailsTask.set(null);
+  }
+
+  edit(task: Task, evt?: Event): void {
+    evt?.stopPropagation();
+    this.openEditModal(task);
   }
 
   daysAgo(dateStr: string): string {
@@ -150,8 +197,14 @@ export class Tasks {
     return `${days} days ago`;
   }
 
-  onDragStart(task: Task): void {
+  isOverdue(task: Task): boolean {
+    if (!task.dueDate) return false;
+    return new Date(task.dueDate).getTime() < Date.now();
+  }
+
+  onDragStart(task: Task, evt: DragEvent): void {
     this.draggedTaskId = task.id;
+    evt.stopPropagation();
   }
 
   onDrop(priority: TaskPriority): void {

@@ -16,6 +16,7 @@ export class TaskService {
     priority: TaskPriority,
     estimatedHours: number,
     description?: string,
+    dueDate?: string,
   ): Task | null {
     const user = this.authService.currentUser();
     if (!user) return null;
@@ -29,6 +30,7 @@ export class TaskService {
       category,
       priority,
       estimatedHours,
+      dueDate,
       status: 'Active',
       createdAt: now,
       updatedAt: now,
@@ -40,6 +42,10 @@ export class TaskService {
 
   getTasks(): Task[] {
     return this.tasks();
+  }
+
+  getTaskById(id: string): Task | undefined {
+    return this.tasks().find((t) => t.id === id);
   }
 
   getTasksByStatus(status: TaskStatus): Task[] {

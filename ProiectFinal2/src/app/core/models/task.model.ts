@@ -8,6 +8,7 @@ export interface Task {
   category: TaskCategory;
 
   estimatedHours: number;
+  dueDate?: string;
 
   createdAt: string;
   updatedAt: string;

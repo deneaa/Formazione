@@ -34,11 +34,6 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'tasks/:id',
-    loadComponent: () => import('./pages/task-details/task-details').then((m) => m.TaskDetails),
-    canActivate: [authGuard],
-  },
-  {
     path: 'statistics',
     loadComponent: () => import('./pages/statistics/statistics').then((m) => m.Statistics),
     canActivate: [authGuard],

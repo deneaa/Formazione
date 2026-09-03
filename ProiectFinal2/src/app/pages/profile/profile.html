@@ -1,1 +1,53 @@
-<p>profile works!</p>
+<div class="card">
+  @if (!editing()) {
+    <h2>Profile</h2>
+
+    <table class="details-table">
+      <tr><td>Username</td><td>{{ user()?.username }}</td></tr>
+      <tr><td>Email</td><td>{{ user()?.email }}</td></tr>
+    </table>
+
+    @if (successMessage) {
+      <p class="success">{{ successMessage }}</p>
+    }
+
+    <div class="task-actions">
+      <button (click)="startEdit()">Edit profile</button>
+      <button (click)="logout()">Logout</button>
+    </div>
+  } @else {
+    <h2>Edit profile</h2>
+
+    <form class="modal-form" (ngSubmit)="save()">
+      <label>Username</label>
+      <input type="text" [(ngModel)]="formUsername" name="formUsername" required minlength="6" />
+
+      <label>Email</label>
+      <input type="email" [(ngModel)]="formEmail" name="formEmail" required email />
+
+      @if (errorMessage) {
+        <p class="error">{{ errorMessage }}</p>
+      }
+
+      <div class="task-actions">
+        <button type="submit">Save</button>
+        <button type="button" (click)="cancelEdit()">Cancel</button>
+      </div>
+    </form>
+  }
+</div>
+
+<div class="stats-row">
+  <div class="card stat-box">
+    <p class="stat-number">{{ totalTasks() }}</p>
+    <p class="stat-label">total tasks</p>
+  </div>
+  <div class="card stat-box">
+    <p class="stat-number">{{ activeTasks() }}</p>
+    <p class="stat-label">active</p>
+  </div>
+  <div class="card stat-box">
+    <p class="stat-number">{{ completedTasks() }}</p>
+    <p class="stat-label">completed</p>
+  </div>
+</div>

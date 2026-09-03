@@ -1,12 +1,15 @@
-<div class="card">
-  <h2>New task</h2>
-  <button class="add-btn" (click)="openAddModal()">+ Add task</button>
+<div class="page-header">
+  <div>
+    <h1>Tasks</h1>
+    <p class="page-subtitle">{{ activeCount() }} active · {{ totalHours() }}h estimated</p>
+  </div>
+  <button class="btn-primary" (click)="openAddModal()">+ Add task</button>
 </div>
 
 <div class="card filters">
   <input
     type="text"
-    placeholder="Search..."
+    placeholder="Search tasks..."
     [ngModel]="searchText()"
     (ngModelChange)="searchText.set($event)"
   />
@@ -39,21 +42,44 @@
       (dragover)="$event.preventDefault()"
       (drop)="onDrop(priority)"
     >
-      <h3>{{ priority }}</h3>
+      <div class="column-header">
+        <h3><span class="priority-dot"></span>{{ priority }}</h3>
+        <span class="column-count">{{ tasksByPriority()[priority].length }}</span>
+      </div>
 
       @for (task of tasksByPriority()[priority]; track task.id) {
-        <div class="task-item" draggable="true" (dragstart)="onDragStart(task)">
+        <div
+          class="task-item"
+          draggable="true"
+          (dragstart)="onDragStart(task, $event)"
+          (click)="openDetails(task)"
+        >
           <p class="task-title">{{ task.title }}</p>
+
           @if (task.description) {
             <p class="task-desc">{{ task.description }}</p>
           }
-          <p class="task-meta">
-            {{ task.category }} · {{ task.estimatedHours }}h · created {{ daysAgo(task.createdAt) }}
-          </p>
-          <div class="task-actions">
-            <button (click)="complete(task)">Complete</button>
-            <button (click)="openEditModal(task)">Edit</button>
-            <button (click)="remove(task)">Delete</button>
+
+          <div class="task-tags">
+            <span class="tag">{{ task.category }}</span>
+            <span class="tag">{{ task.estimatedHours }}h</span>
+            @if (task.dueDate) {
+              <span class="tag" [class.tag-overdue]="isOverdue(task)">
+                due {{ task.dueDate | date: 'dd MMM' }}
+              </span>
+            }
+          </div>
+
+          <div class="task-icons">
+            <button class="icon-btn" title="Complete" (click)="complete(task, $event)">
+              <svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="icon-btn" title="Edit" (click)="edit(task, $event)">
+              <svg viewBox="0 0 20 20" fill="none"><path d="M14.5 3.5l2 2L6 16l-2.5.5.5-2.5L14.5 3.5z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="icon-btn icon-btn-danger" title="Delete" (click)="remove(task, $event)">
+              <svg viewBox="0 0 20 20" fill="none"><path d="M4 6h12M8 6V4h4v2m-7 0l1 10h6l1-10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
           </div>
         </div>
       } @empty {
@@ -64,44 +90,77 @@
 </div>
 
 <div class="card links-row">
-  <a routerLink="/tasks/status/completed" class="secondary-btn">
+  <a routerLink="/tasks/status/completed" class="btn-secondary">
     Completed tasks ({{ completedCount() }})
   </a>
-  <a routerLink="/tasks/status/deleted" class="secondary-btn">
+  <a routerLink="/tasks/status/deleted" class="btn-secondary">
     Deleted tasks ({{ deletedCount() }})
   </a>
 </div>
 
-@if (modalOpen()) {
-  <div class="modal-overlay" (click)="closeModal()">
+<!-- Details modal -->
+@if (detailsTask(); as t) {
+  <div class="modal-overlay" (click)="closeDetails()">
     <div class="modal" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h3>{{ modalMode() === 'add' ? 'New task' : 'Edit task' }}</h3>
-        <button class="close-btn" (click)="closeModal()">✕</button>
+        <h3>{{ t.title }}</h3>
+        <button class="close-btn" (click)="closeDetails()">Close</button>
       </div>
 
-      <form class="modal-form" (ngSubmit)="submitModal()">
+      <div class="modal-body">
+        @if (t.description) {
+          <p class="details-desc">{{ t.description }}</p>
+        }
+
+        <table class="details-table">
+          <tr><td>Priority</td><td>{{ t.priority }}</td></tr>
+          <tr><td>Category</td><td>{{ t.category }}</td></tr>
+          <tr><td>Estimated hours</td><td>{{ t.estimatedHours }}h</td></tr>
+          <tr><td>Created</td><td>{{ t.createdAt | date: 'dd MMM yyyy, HH:mm' }}</td></tr>
+          @if (t.dueDate) {
+            <tr>
+              <td>Due date</td>
+              <td [class.overdue-text]="isOverdue(t)">
+                {{ t.dueDate | date: 'dd MMM yyyy' }}
+                @if (isOverdue(t)) { <span>(overdue)</span> }
+              </td>
+            </tr>
+          }
+        </table>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="editFromDetails(t)">Edit</button>
+        <button class="btn-secondary btn-danger-outline" (click)="remove(t)">Delete</button>
+        <button class="btn-primary" (click)="complete(t)">Mark as completed</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Add / edit form modal -->
+@if (formModalOpen()) {
+  <div class="modal-overlay" (click)="closeFormModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ formMode() === 'add' ? 'New task' : 'Edit task' }}</h3>
+        <button class="close-btn" (click)="closeFormModal()">Close</button>
+      </div>
+
+      <form class="modal-form" [formGroup]="taskForm" (ngSubmit)="submitForm()">
         <label>Title</label>
-        <input
-          type="text"
-          placeholder="What do you need to do?"
-          [(ngModel)]="formTitle"
-          name="formTitle"
-          required
-        />
+        <input type="text" placeholder="What do you need to do?" formControlName="title" />
+        @if (taskForm.controls.title.touched && taskForm.controls.title.invalid) {
+          <p class="field-error">Titlul trebuie să aibă minim 2 caractere.</p>
+        }
 
         <label>Description (optional)</label>
-        <textarea
-          rows="3"
-          placeholder="Add more details..."
-          [(ngModel)]="formDescription"
-          name="formDescription"
-        ></textarea>
+        <textarea rows="3" placeholder="Add more details..." formControlName="description"></textarea>
 
         <div class="form-row">
           <div class="form-col">
             <label>Priority</label>
-            <select [(ngModel)]="formPriority" name="formPriority">
+            <select formControlName="priority">
               @for (p of priorities; track p) {
                 <option [value]="p">{{ p }}</option>
               }
@@ -110,7 +169,7 @@
 
           <div class="form-col">
             <label>Category</label>
-            <select [(ngModel)]="formCategory" name="formCategory">
+            <select formControlName="category">
               @for (c of categories; track c) {
                 <option [value]="c">{{ c }}</option>
               }
@@ -119,14 +178,17 @@
 
           <div class="form-col">
             <label>Est. hours</label>
-            <input type="number" min="0" step="0.5" [(ngModel)]="formHours" name="formHours" />
+            <input type="number" min="0" step="0.5" formControlName="estimatedHours" />
           </div>
         </div>
 
+        <label>Due date (optional)</label>
+        <input type="date" formControlName="dueDate" />
+
         <div class="modal-actions">
-          <button type="button" class="secondary-btn" (click)="closeModal()">Cancel</button>
-          <button type="submit" class="add-btn">
-            {{ modalMode() === 'add' ? 'Add' : 'Save' }}
+          <button type="button" class="btn-secondary" (click)="closeFormModal()">Cancel</button>
+          <button type="submit" class="btn-primary">
+            {{ formMode() === 'add' ? 'Add task' : 'Save changes' }}
           </button>
         </div>
       </form>

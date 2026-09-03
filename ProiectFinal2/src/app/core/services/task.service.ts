@@ -8,19 +8,17 @@ import { AuthService } from './auth.service';
 export class TaskService {
   private authService = inject(AuthService);
 
-  readonly tasks = computed(() => this.authService.currentUser()?.tasks ?? []);
+  readonly tasks = computed(() => this.purgeExpired(this.authService.currentUser()?.tasks ?? []));
 
   createTask(
     title: string,
     category: TaskCategory,
     priority: TaskPriority,
+    estimatedHours: number,
     description?: string,
   ): Task | null {
     const user = this.authService.currentUser();
-
-    if (!user) {
-      return null;
-    }
+    if (!user) return null;
 
     const now = new Date().toISOString();
 
@@ -30,18 +28,13 @@ export class TaskService {
       description,
       category,
       priority,
+      estimatedHours,
       status: 'Active',
       createdAt: now,
       updatedAt: now,
     };
 
-    const updatedUser = {
-      ...user,
-      tasks: [...user.tasks, task],
-    };
-
-    this.authService.updateCurrentUser(updatedUser);
-
+    this.authService.updateCurrentUser({ ...user, tasks: [...user.tasks, task] });
     return task;
   }
 
@@ -50,77 +43,53 @@ export class TaskService {
   }
 
   getTasksByStatus(status: TaskStatus): Task[] {
-    return this.tasks().filter((task) => task.status === status);
+    return this.tasks().filter((t) => t.status === status);
   }
 
   completeTask(id: string): void {
-    const user = this.authService.currentUser();
-
-    if (!user) {
-      return;
-    }
-
-    const updatedTasks = user.tasks.map((task) =>
-      task.id === id
-        ? {
-            ...task,
-            status: 'Completed' as TaskStatus,
-            completedAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          }
-        : task,
-    );
-
-    this.authService.updateCurrentUser({
-      ...user,
-      tasks: updatedTasks,
+    this.patchTask(id, {
+      status: 'Completed',
+      completedAt: new Date().toISOString(),
     });
+  }
+
+  reactivateTask(id: string): void {
+    this.patchTask(id, { status: 'Active', completedAt: undefined });
   }
 
   deleteTask(id: string): void {
-    const user = this.authService.currentUser();
-
-    if (!user) {
-      return;
-    }
-
-    const updatedTasks = user.tasks.map((task) =>
-      task.id === id
-        ? {
-            ...task,
-            status: 'Deleted' as TaskStatus,
-            deletedAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          }
-        : task,
-    );
-
-    this.authService.updateCurrentUser({
-      ...user,
-      tasks: updatedTasks,
+    this.patchTask(id, {
+      status: 'Deleted',
+      deletedAt: new Date().toISOString(),
     });
   }
 
-  updateTask(id: string, changes: Partial<Task>): void {
-    const user = this.authService.currentUser();
+  changePriority(id: string, priority: TaskPriority): void {
+    this.patchTask(id, { priority });
+  }
 
-    if (!user) {
-      return;
-    }
+  updateTask(id: string, changes: Partial<Task>): void {
+    this.patchTask(id, changes);
+  }
+
+  private patchTask(id: string, changes: Partial<Task>): void {
+    const user = this.authService.currentUser();
+    if (!user) return;
 
     const updatedTasks = user.tasks.map((task) =>
-      task.id === id
-        ? {
-            ...task,
-            ...changes,
-            updatedAt: new Date().toISOString(),
-          }
-        : task,
+      task.id === id ? { ...task, ...changes, updatedAt: new Date().toISOString() } : task,
     );
 
-    this.authService.updateCurrentUser({
-      ...user,
-      tasks: updatedTasks,
+    this.authService.updateCurrentUser({ ...user, tasks: updatedTasks });
+  }
+
+  private purgeExpired(tasks: Task[]): Task[] {
+    const now = Date.now();
+    const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+
+    return tasks.filter((t) => {
+      if (t.status !== 'Deleted' || !t.deletedAt) return true;
+      return now - new Date(t.deletedAt).getTime() < THIRTY_DAYS;
     });
   }
 }

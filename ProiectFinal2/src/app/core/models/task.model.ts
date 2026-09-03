@@ -7,6 +7,8 @@ export interface Task {
   status: TaskStatus;
   category: TaskCategory;
 
+  estimatedHours: number;
+
   createdAt: string;
   updatedAt: string;
 
@@ -16,4 +18,7 @@ export interface Task {
 
 export type TaskPriority = 'Low' | 'Medium' | 'High';
 export type TaskStatus = 'Active' | 'Completed' | 'Deleted';
-export type TaskCategory = 'Personal' | 'Work' | 'Study' | 'Health & Fitness' | 'Finance' | "Others";
+export type TaskCategory = 'Personal' | 'Work' | 'Study' | 'Health & Fitness' | 'Finance' | 'Others';
+
+export const PRIORITIES: TaskPriority[] = ['High', 'Medium', 'Low'];
+export const CATEGORIES: TaskCategory[] = ['Personal', 'Work', 'Study', 'Health & Fitness', 'Finance', 'Others'];

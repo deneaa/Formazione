@@ -1,1 +1,13 @@
-<p>home works!</p>
+<div class="card">
+  <h1>To Do App</h1>
+
+  @if (!auth.isAuthenticated()) {
+    <p>
+      <a routerLink="/login">Login</a> sau <a routerLink="/register">Register</a>
+    </p>
+  } @else {
+    <p>
+      <a routerLink="/tasks">Go to tasks</a>
+    </p>
+  }
+</div>

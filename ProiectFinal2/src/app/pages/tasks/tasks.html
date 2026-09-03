@@ -1,1 +1,135 @@
-<p>tasks works!</p>
+<div class="card">
+  <h2>New task</h2>
+  <button class="add-btn" (click)="openAddModal()">+ Add task</button>
+</div>
+
+<div class="card filters">
+  <input
+    type="text"
+    placeholder="Search..."
+    [ngModel]="searchText()"
+    (ngModelChange)="searchText.set($event)"
+  />
+
+  <select [ngModel]="categoryFilter()" (ngModelChange)="categoryFilter.set($event)">
+    <option value="All">All categories</option>
+    @for (c of categories; track c) {
+      <option [value]="c">{{ c }}</option>
+    }
+  </select>
+
+  <select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
+    <option value="date">Sort by date</option>
+    <option value="priority">Sort by priority</option>
+  </select>
+
+  <select [ngModel]="sortDir()" (ngModelChange)="sortDir.set($event)">
+    <option value="desc">Descending</option>
+    <option value="asc">Ascending</option>
+  </select>
+</div>
+
+<div class="board">
+  @for (priority of priorities; track priority) {
+    <div
+      class="column"
+      [class.priority-high]="priority === 'High'"
+      [class.priority-medium]="priority === 'Medium'"
+      [class.priority-low]="priority === 'Low'"
+      (dragover)="$event.preventDefault()"
+      (drop)="onDrop(priority)"
+    >
+      <h3>{{ priority }}</h3>
+
+      @for (task of tasksByPriority()[priority]; track task.id) {
+        <div class="task-item" draggable="true" (dragstart)="onDragStart(task)">
+          <p class="task-title">{{ task.title }}</p>
+          @if (task.description) {
+            <p class="task-desc">{{ task.description }}</p>
+          }
+          <p class="task-meta">
+            {{ task.category }} · {{ task.estimatedHours }}h · created {{ daysAgo(task.createdAt) }}
+          </p>
+          <div class="task-actions">
+            <button (click)="complete(task)">Complete</button>
+            <button (click)="openEditModal(task)">Edit</button>
+            <button (click)="remove(task)">Delete</button>
+          </div>
+        </div>
+      } @empty {
+        <p class="empty">No tasks here</p>
+      }
+    </div>
+  }
+</div>
+
+<div class="card links-row">
+  <a routerLink="/tasks/status/completed" class="secondary-btn">
+    Completed tasks ({{ completedCount() }})
+  </a>
+  <a routerLink="/tasks/status/deleted" class="secondary-btn">
+    Deleted tasks ({{ deletedCount() }})
+  </a>
+</div>
+
+@if (modalOpen()) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ modalMode() === 'add' ? 'New task' : 'Edit task' }}</h3>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <form class="modal-form" (ngSubmit)="submitModal()">
+        <label>Title</label>
+        <input
+          type="text"
+          placeholder="What do you need to do?"
+          [(ngModel)]="formTitle"
+          name="formTitle"
+          required
+        />
+
+        <label>Description (optional)</label>
+        <textarea
+          rows="3"
+          placeholder="Add more details..."
+          [(ngModel)]="formDescription"
+          name="formDescription"
+        ></textarea>
+
+        <div class="form-row">
+          <div class="form-col">
+            <label>Priority</label>
+            <select [(ngModel)]="formPriority" name="formPriority">
+              @for (p of priorities; track p) {
+                <option [value]="p">{{ p }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-col">
+            <label>Category</label>
+            <select [(ngModel)]="formCategory" name="formCategory">
+              @for (c of categories; track c) {
+                <option [value]="c">{{ c }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-col">
+            <label>Est. hours</label>
+            <input type="number" min="0" step="0.5" [(ngModel)]="formHours" name="formHours" />
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="secondary-btn" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="add-btn">
+            {{ modalMode() === 'add' ? 'Add' : 'Save' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

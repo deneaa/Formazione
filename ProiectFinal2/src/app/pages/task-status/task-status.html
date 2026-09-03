@@ -1,0 +1,59 @@
+<div class="card page-header">
+  <div>
+    <h2>{{ isDeleted() ? 'Deleted tasks' : 'Completed tasks' }}</h2>
+    <p class="subtitle">
+      @if (isDeleted()) {
+        Removed automatically 30 days after deletion.
+      } @else {
+        Everything you've finished so far.
+      }
+    </p>
+  </div>
+  <a routerLink="/tasks" class="secondary-btn">Back to tasks</a>
+</div>
+
+<div class="list">
+  @for (task of tasks(); track task.id) {
+    <div
+      class="task-row"
+      [class.priority-high]="task.priority === 'High'"
+      [class.priority-medium]="task.priority === 'Medium'"
+      [class.priority-low]="task.priority === 'Low'"
+    >
+      <div class="task-row-main">
+        <p class="task-title">{{ task.title }}</p>
+        @if (task.description) {
+          <p class="task-desc">{{ task.description }}</p>
+        }
+
+        <div class="tag-row">
+          <span class="tag">{{ task.category }}</span>
+          <span class="tag">{{ task.priority }} priority</span>
+          <span class="tag">{{ task.estimatedHours }}h estimated</span>
+        </div>
+
+        <div class="dates">
+          <span>Started: {{ task.createdAt | date: 'dd MMM yyyy, HH:mm' }}</span>
+
+          @if (isDeleted()) {
+            <span>Deleted: {{ task.deletedAt | date: 'dd MMM yyyy, HH:mm' }}</span>
+            <span>Purged in {{ daysLeftToPurge(task) }} {{ daysLeftToPurge(task) === 1 ? 'day' : 'days' }}</span>
+          } @else {
+            <span>Completed: {{ task.completedAt | date: 'dd MMM yyyy, HH:mm' }}</span>
+            <span>Took {{ durationDays(task) }} {{ durationDays(task) === 1 ? 'day' : 'days' }}</span>
+          }
+        </div>
+      </div>
+
+      @if (!isDeleted()) {
+        <button class="secondary-btn" (click)="reactivate(task)">Reactivate</button>
+      }
+    </div>
+  } @empty {
+    <div class="card">
+      <p class="empty">
+        {{ isDeleted() ? 'No deleted tasks.' : 'No completed tasks yet.' }}
+      </p>
+    </div>
+  }
+</div>

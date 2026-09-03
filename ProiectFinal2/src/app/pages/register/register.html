@@ -1,1 +1,61 @@
-<p>register works!</p>
+<div class="card form-card">
+  <h2>Register</h2>
+
+  <form (ngSubmit)="onSubmit()" #registerForm="ngForm" novalidate>
+    <label>Username</label>
+    <input
+      type="text"
+      [(ngModel)]="username"
+      name="username"
+      required
+      minlength="6"
+      #usernameField="ngModel"
+    />
+    @if (usernameField.touched && usernameField.invalid) {
+      <p class="field-error">Username-ul trebuie să aibă minim 6 caractere.</p>
+    }
+
+    <label>Email</label>
+    <input type="email" [(ngModel)]="email" name="email" required email #emailField="ngModel" />
+    @if (emailField.touched && emailField.invalid) {
+      <p class="field-error">Introdu un email valid.</p>
+    }
+
+    <label>Parolă</label>
+    <input
+      type="password"
+      [(ngModel)]="password"
+      name="password"
+      required
+      minlength="6"
+      #passwordField="ngModel"
+    />
+    @if (passwordField.touched && passwordField.invalid) {
+      <p class="field-error">
+        Parola trebuie să aibă minim 6 caractere.
+      </p>
+    }
+
+    <label>Confirmă parola</label>
+    <input
+      type="password"
+      [(ngModel)]="confirmPassword"
+      name="confirmPassword"
+      required
+      #confirmField="ngModel"
+    />
+    @if (confirmField.touched && password !== confirmPassword) {
+      <p class="field-error">Parolele nu coincid.</p>
+    }
+
+    @if (errorMessage) {
+      <p class="error">{{ errorMessage }}</p>
+    }
+
+    <button type="submit" [disabled]="registerForm.invalid || password !== confirmPassword">
+      Register
+    </button>
+  </form>
+
+  <p>Ai deja cont? <a routerLink="/login">Login</a></p>
+</div>

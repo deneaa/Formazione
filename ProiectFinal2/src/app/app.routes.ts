@@ -28,6 +28,12 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'tasks/status/:status',
+    loadComponent: () =>
+      import('./pages/task-status/task-status').then((m) => m.TaskStatus),
+    canActivate: [authGuard],
+  },
+  {
     path: 'tasks/:id',
     loadComponent: () => import('./pages/task-details/task-details').then((m) => m.TaskDetails),
     canActivate: [authGuard],

@@ -1,1 +1,39 @@
-<p>login works!</p>
+<div class="card form-card">
+  <h2>Login</h2>
+
+  <form (ngSubmit)="onSubmit()" #loginForm="ngForm" novalidate>
+    <label>Username</label>
+    <input
+      type="text"
+      [(ngModel)]="username"
+      name="username"
+      required
+      minlength="6"
+      #usernameField="ngModel"
+    />
+    @if (usernameField.touched && usernameField.invalid) {
+      <p class="field-error">Username-ul trebuie să aibă minim 6 caractere.</p>
+    }
+
+    <label>Parolă</label>
+    <input
+      type="password"
+      [(ngModel)]="password"
+      name="password"
+      required
+      minlength="6"
+      #passwordField="ngModel"
+    />
+    @if (passwordField.touched && passwordField.invalid) {
+      <p class="field-error">Parola trebuie să aibă minim 6 caractere.</p>
+    }
+
+    @if (errorMessage) {
+      <p class="error">{{ errorMessage }}</p>
+    }
+
+    <button type="submit" [disabled]="loginForm.invalid">Login</button>
+  </form>
+
+  <p>Nu ai cont? <a routerLink="/register">Register</a></p>
+</div>
